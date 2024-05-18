@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Apply for New Club</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+                        background-color: #1a202c;
+
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function App() {
+            const [formData, setFormData] = React.useState({
+                name: '',
+                field: 'scientific',
+                brief: '',
+                boardMembers: 'no'
+            });
+
+            const handleInputChange = (event) => {
+                const { name, value } = event.target;
+                setFormData(prevState => ({
+                    ...prevState,
+                    [name]: value
+                }));
+            };
+
+            const handleBoardMembersChange = (value) => {
+                setFormData(prevState => ({
+                    ...prevState,
+                    boardMembers: value
+                }));
+            };
+
+            const resetForm = () => {
+                setFormData({
+                    name: '',
+                    field: 'scientific',
+                    brief: '',
+                    boardMembers: 'no'
+                });
+            };
+
+            return (
+                <div className="flex h-screen">
+                    <div className="w-1/4 bg-gray-900 p-8">
+                        <div className="mb-8">
+                            <img src="https://cdn.asp.events/CLIENT_TFI_Lode_BAD7CE92_0DD6_8AE0_2284A46F94274BB5/sites/ICRA2023/media/PSUT-(002).png" alt="PSUT logo" height="200" width="200" />
+                            <h1 className="text-xl font-bold mt-2">CAMPUS SYNC</h1>
+                          
+                            <p className="text-sm">APPLY FOR NEW CLUB</p>
+                        </div>
+                        <div className="text-gray-400">
+                            <p className="mb-4 cursor-pointer"><i className="fas fa-user mr-2"></i> My Profile</p>
+                            <p className="mb-4 cursor-pointer"><i className="fas fa-users mr-2"></i> Apply For New Club</p>
+                        </div>
+                    </div>
+                    <div className="w-3/4 p-8">
+                        <div className="flex justify-between items-center mb-8">
+                            <div>
+                                <h2 className="text-3xl font-bold">APPLY FOR NEW CLUB</h2>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="fas fa-bell mr-4"></i>
+                                <i className="fas fa-envelope mr-4"></i>
+                                <i className="fas fa-caret-down mr-4"></i>
+                            </div>
+                        </div>
+                        <div className="bg-gray-800 p-8">
+                            <form action="Apply_for_new_clubs.php" method="POST">
+                                <div className="mb-6">
+                                    <label className="block mb-2">Name</label>
+                                    <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} className="w-full bg-gray-700 p-2 mb-4" />
+                                    <label className="block mb-2">FIELD</label>
+                                    <select name="field" value={formData.field} onChange={handleInputChange} className="w-full bg-gray-700 p-2 mb-4">
+                                        <option value="scientific">Scientific Club</option>
+                                        <option value="art">Art Club</option>
+                                        <option value="others">Others</option>
+                                    </select>
+                                    <label htmlFor="club_description" className="block mb-2">Club Brief</label>
+                                    <input type="text" name="brief" id="club_description" value={formData.brief} onChange={handleInputChange} className="w-full bg-gray-700 p-2 mb-4" />
+                                </div>
+                                <div className="flex items-center mb-6">
+                                    <label className="mr-2">Do you have any board members?</label>
+                                    <button type="button" onClick={() => handleBoardMembersChange('yes')} className={`px-4 py-2 rounded mr-2 ${formData.boardMembers === 'yes' ? 'bg-green-500 text-black' : 'bg-gray-700'}`}>Yes</button>
+                                    <button type="button" onClick={() => handleBoardMembersChange('no')} className={`px-4 py-2 rounded ${formData.boardMembers === 'no' ? 'bg-green-500 text-black' : 'bg-gray-700'}`}>No</button>
+                                </div>
+                                <div className="flex justify-between">
+                                    <button type="button" onClick={resetForm} className="bg-purple-600 px-8 py-2 rounded">Reset Information</button>
+                                    <button type="submit" className="bg-purple-600 px-8 py-2 rounded">Apply Now</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>

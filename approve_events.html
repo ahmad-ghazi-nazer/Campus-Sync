@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Approval</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div id="app"></div>
+    <script type="text/babel">
+        function App() {
+            const [events, setEvents] = React.useState([]);
+            const [error, setError] = React.useState('');
+
+            React.useEffect(() => {
+                fetch('approve_event.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        setError(data.error);
+                    } else {
+                        setEvents(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                    setError(`Failed to fetch data: ${error.message}`);
+                });
+            }, []);
+
+            function handleAction(suggestedName, action) {
+    fetch('approve_event.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `suggested_name=${encodeURIComponent(suggestedName)}&action=${action}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert(data.message);
+        }
+        // Refresh the page after handling the response
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error handling action:', error);
+        alert('Failed to perform the action.');
+        // Optionally, refresh even if there's an error to ensure consistency
+        window.location.reload();
+    });
+}
+
+
+            if (error) {
+                return <div>Error: {error}</div>;
+            }
+
+            return (
+                <div className="flex h-screen">
+                    <div className="w-1/4 bg-gray-900 p-6">
+                        <div className="mb-10">
+                            <img src="psut_logo.png" alt="University logo" height="150" width="150" />
+                            <h1 className="text-3xl font-bold mt-2">'</h1>
+                            <h1 className="text-3xl font-bold mt-2">  </h1>
+
+                            <h1 className="text-3xl font-bold mt-2">CAMPUS SYNC | </h1>
+                            <h2 className="text-xl">APPROVE EVENTS</h2>
+                        </div>
+                        <div className="text-gray-500">
+                            <h3 className="text-lg font-bold mb-4">Menu</h3>
+                            <NavLink title="Dashboard" icon="fas fa-tachometer-alt" />
+                            <NavLink title="Approve Events" icon="fas fa-inbox" />
+                            <NavLink title="Approve New Club Requests" icon="fas fa-inbox" />
+                            <NavLink title="Calendar" icon="fas fa-calendar-alt" />
+                            <NavLink title="Track & View Clubs Info" icon="fas fa-users" />
+                            <NavLink title="My Profile" icon="fas fa-user" />
+                            <NavLink title="Track Applications" icon="fas fa-clipboard-list" />
+                            <NavLink title="Help & Support" icon="fas fa-question-circle" />
+                        </div>
+                    </div>
+                    <div className="w-3/4 p-6">
+                        <div className="flex justify-between items-center mb-10">
+                            <div className="flex items-center">
+                                <div className="text-2xl font-bold mr-4">Sorted by Time</div>
+                                <div>...</div>
+                            </div>
+                            <div className="flex items-center">
+                                <ClickableIcon icon="fas fa-search" />
+                                <ClickableIcon icon="fas fa-shopping-cart" />
+                                <ClickableIcon icon="fas fa-bell" />
+                                <div className="mr-4 cursor-pointer" onClick={() => window.location.href = 'login.html'}>Log Out!</div>
+                                <img src="user_logo.png" alt="Profile picture of Employee" className="rounded-full cursor-pointer"                     style={{ width: "50px", height: "50px" }}
+ onClick={() => window.location.href = 'login.html'} />
+                            </div>
+                        </div>
+                       <div className="flex">
+    <div className="w-full pr-4">
+        {events.length > 0 ? (
+            events.map(event => (
+                <RequestItem
+                    key={event.suggested_name}
+                    title={event.suggested_name}
+                    subtitle={`By ${event.club_name}, Suggested Date: ${new Date(event.suggested_date).toLocaleString()}`}
+                    details={event.event_details}
+                    location={event.suggested_location}
+                    onApprove={() => handleAction(event.suggested_name, 'approve')}
+                    onDeny={() => handleAction(event.suggested_name, 'deny')}
+                />
+            ))
+        ) : (
+            <div className="flex flex-col items-center">
+                <img src="no_active_pic.jpg" alt="No Requests" style={{ width: "50%" }} />
+                <div className="text-blue-500 font-extrabold text-3xl w-full text-center mt-4">
+                    Thank you, there are no pending event activities at the moment that need your approval!
+                </div>
+            </div>
+        )}
+    </div>
+</div>
+
+                    </div>
+                </div>
+            );
+        }
+
+        function ClickableIcon({ icon }) {
+            return (
+                <div className="mr-4 cursor-pointer" onClick={() => window.location.href = 'approve_events.html'}>
+                    <i className={icon}></i>
+                </div>
+            );
+        }
+
+        function NavLink({ title, icon }) {
+    let url = 'https://www.psut.edu.jo/uploads/2024/04/psut-calendar-2024-2025.jpg'; // Default URL
+    let additionalClasses = "";
+    
+    if (title === "Dashboard") {
+        url = 'Dashboard.php';
+    } else if (title === "Approve New Club Requests") {
+        url = 'Approve_club.html';
+    } else if (title === "Approve Events") {
+        url = 'approve_events.html';  // Adjust URL as needed for "Approve Events"
+        additionalClasses = "text-blue-500";  // This adds the blue color
+    }
+    else if (title === "Track & View Clubs Info") {
+        url = 'track_club_request.php';  // Adjust URL as needed for "Approve Events"
+    }
+
+    return (
+        <div className={`mb-4 cursor-pointer ${additionalClasses}`} onClick={() => window.location.href = url}>
+            <i className={`${icon} mr-2`}></i>
+            {title}
+        </div>
+    );
+}
+
+
+        function RequestItem({ title, subtitle, details, location, onApprove, onDeny }) {
+            return (
+                <div className="mb-6 bg-gray-800 p-4 rounded-lg">
+                    <div className="text-lg font-bold">{title}</div>
+                    <div className="text-gray-500 text-sm mb-2">{subtitle}</div>
+                    <textarea readOnly className="text-sm p-2 bg-gray-700 text-white w-full mb-2 rounded" value={details}></textarea>
+                    <textarea readOnly className="text-sm p-2 bg-gray-700 text-white w-full mb-2 rounded" value={location}></textarea>
+                    <button onClick={onApprove} className="text-sm py-1 px-3 bg-green-500 hover:bg-green-600 rounded text-white mr-2">Approve</button>
+                    <button onClick={onDeny} className="text-sm py-1 px-3 bg-red-500 hover:bg-red-600 rounded text-white">Refuse</button>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>

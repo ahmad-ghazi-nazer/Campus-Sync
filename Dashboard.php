@@ -1,0 +1,144 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Sync Dashboard</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .menu-item:hover {
+            background-color: #4A5568;
+        }
+        .menu-item-active {
+            background-color: #2D3748;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function App() {
+            const navigateTo = (url) => {
+                // Get the user ID from the session
+                const userId = <?php echo json_encode($_SESSION['user_id']); ?>;
+                // Append the user ID as a query parameter to the URL
+                const urlWithUserId = `${url}?user_id=${userId}`;
+                window.location.href = urlWithUserId;
+            };
+
+            return (
+                <div className="flex h-screen overflow-hidden">
+                    <aside className="w-64 bg-gray-800 p-6 overflow-y-auto">
+                        <div className="mb-8">
+                            <img src="psut_logo.png" alt="University logo" />
+                            <h1 className="text-2xl font-bold mt-4">CAMPUS SYNC |</h1>
+                            <h2 className="text-xl">DASHBOARD</h2>
+                        </div>
+                        <nav>
+                            <ul>
+                                <li className="text-gray-400 mb-6">Menu</li>
+                                <li className="menu-item menu-item-active mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Dashboard.php')}><i className="fas fa-home mr-2"></i>Dashboard</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('approve_events.html')}><i className="fas fa-check-square mr-2"></i>Approve Requests</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('https://www.psut.edu.jo/uploads/2024/04/psut-calendar-2024-2025.jpg')}><i className="fas fa-calendar-alt mr-2"></i>Academic Calendar</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Approve_club.html')}><i className="fas fa-users mr-2"></i>Approve New Clubs</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('track_event_emploe.php')}><i className="fas fa-tasks mr-2"></i>Track Applications</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('track_for_admin.php')}><i className="fas fa-users mr-2"></i>View & Follow Clubs</li>
+
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Helpandsupport_cp_new.html')}><i className="fas fa-question-circle mr-2"></i>Help & Support</li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <main className="flex-1 p-6 overflow-y-auto">
+                        <div className="flex justify-between items-center mb-8">
+                            <div className="flex space-x-4">
+                                <div className="bg-red-500 p-4 rounded-lg">
+                                    <i className="fas fa-calendar-alt fa-2x text-white"></i>
+                                    <span className="ml-2 text-xl">4</span>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg">
+                                    <i className="fas fa-cog fa-2x text-white"></i>
+                                    <span className="ml-2 text-xl">4</span>
+                                </div>
+                                <div className="bg-yellow-500 p-4 rounded-lg">
+                                    <i className="fas fa-bell fa-2x text-white"></i>
+                                    <span className="ml-2 text-xl">4</span>
+                                </div>
+                            </div>
+                            <div className="flex space-x-4">
+                                <input type="text" placeholder="Cubs, Events etc ..." className="bg-gray-700 rounded-lg p-2" />
+                                <button className="bg-red-500 px-4 py-2 rounded-lg" onClick={() => navigateTo('login.html')}>Log out!</button>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-6">
+                            <div className="col-span-2 bg-gray-800 p-6 rounded-lg">
+                                <h3 className="text-xl mb-4">Active Events</h3>
+                                <div className="flex justify-between mb-4">
+                                    <button className="bg-red-500 px-4 py-2 rounded-lg text-white">Event Details</button>
+                                    <button className="bg-gray-700 px-4 py-2 rounded-lg text-white">Check Status</button>
+                                </div>
+                                <h3 className="text-xl mb-4">Comming Events</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <EventCard title="Sumo Robotics" club="Falcons Club" time="4 Days" />
+                                    <EventCard title="Coding Marthon" club="ACM Club" time="2 days" />
+                                    <EventCard title="Volunteering" club="Sood youth Club" time="6 hours" />
+                                    <EventCard title="Movie Night" club="Entertainment Club" time="1 Night" />
+                                </div>
+                            </div>
+                            <div className="bg-gray-800 p-6 rounded-lg">
+                                <h3 className="text-xl mb-4">Previous Events</h3>
+                                <PreviousEvent title="Finance Forum" club="Accounting Club" date="Dec 4th, 2023" status="Successful" />
+                                <PreviousEvent title="Cyber Summit" club="Cyber Security Club" date="May 4th, 2023" status="Failed" />
+                                <PreviousEvent title="AI Ability" club="Data Science Club" date="May 7th, 2023" status="Missing Report!" />
+                                <PreviousEvent title="Software SB" club="IEEE CLUB" date="May 12th, 2023" status="Successful" />
+                                <PreviousEvent title="TECH FEST" club="Falcons Club" date="May 27th, 2023" status="Successful" />
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        function EventCard({ title, club, time }) {
+            return (
+                <div className="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div>
+                        <h4 className="text-lg">{title}</h4>
+                        <p className="text-gray-400">{club}</p>
+                        <p className="text-gray-400">{time}</p>
+                    </div>
+                    <button className="bg-purple-500 px-4 py-2 rounded-lg text-white">See Details</button>
+                </div>
+            );
+        }
+
+        function PreviousEvent({ title, club, date, status }) {
+            const statusClass = status === "Successful" ? "text-green-500" : status === "Failed" ? "text-red-500" : "text-yellow-500";
+            return (
+                <div className="bg-gray-700 p-4 rounded-lg flex justify-between items-center mb-4">
+                    <div>
+                        <h4 className="text-lg">{title}</h4>
+                        <p className="text-gray-400">{club}</p>
+                        <p className="text-gray-400">{date}</p>
+                    </div>
+                    <span className={`${statusClass} font-bold`}>{status}</span>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+
+</body>
+</html>

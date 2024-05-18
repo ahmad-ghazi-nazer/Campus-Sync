@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Page</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function App() {
+            // Function to validate user_id to accept only integer numbers up to 8 digits
+            const validateUserId = (event) => {
+                const input = event.target;
+                const value = input.value;
+                if (!/^\d{0,8}$/.test(value)) {
+                    input.setCustomValidity("User ID must be an integer and no more than 8 digits.");
+                } else {
+                    input.setCustomValidity("");
+                }
+            };
+
+            // Function to validate terms checkbox
+            const validateTerms = () => {
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    termsCheckbox.setCustomValidity("Please accept conditions and rules.");
+                } else {
+                    termsCheckbox.setCustomValidity("");
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-800 flex justify-center items-center p-4">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+                        <div className="flex justify-center mb-4">
+                            <img src="https://elearning.psut.edu.jo/pluginfile.php/1/core_admin/logocompact/300x300/1647423453/Roundel.png" alt="PSUT logo" style={{ width: '100px', height: '100px' }} />
+                        </div>
+                        <h1 className="text-3xl font-bold text-center text-blue-900 mb-8">CAMPUS SYNC</h1>
+                        <div className="border-b-2 border-black mb-8"></div>
+                        <form className="space-y-4" action="Registration.php" method="post" onSubmit={validateTerms}>
+                            <div className="text-right">
+                                <h2 className="text-lg font-semibold text-center text-blue-900 mb-2">APPLY TO CREATE A NEW CLUB</h2>
+                            </div>
+                            <input type="text" id="user_id" name="user_id" required placeholder="Your PSUT ID" className="w-full p-2 border border-gray-300 rounded" onInput={validateUserId} />
+                            <input type="text" placeholder="Create user name" name="username" id="username" required className="w-full p-2 border border-gray-300 rounded" />
+                            <input type="password" id="passkey" name="passkey" required placeholder="Create Password" className="w-full p-2 border border-gray-300 rounded" />
+                            <input type="email" id="email" name="email" required placeholder="Enter your PSUT Email" className="w-full p-2 border border-gray-300 rounded" />
+                            <div className="flex items-center mb-4">
+                                <input id="terms" type="checkbox" className="mr-2" required />
+                                <label htmlFor="terms" className="text-sm text-gray-600">I agree to condition and agreement</label>
+                            </div>
+                            <div className="mb-4">
+                                <div>
+                                    <input type="radio" id="president" name="role" value="New Club President" required />
+                                    <label htmlFor="president" className="mr-4">I want to apply to create a new club!</label>
+                                </div>
+                                <div>
+                                   
+                                </div>
+                            </div>
+                            <button type="submit" value="Register" name="register" className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">Register!</button>
+                        </form>
+                        <div className="text-center text-sm text-gray-600 mt-8">
+                            © Princess Sumaya University for Technology
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

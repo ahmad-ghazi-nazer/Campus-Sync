@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Sync Dashboard</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .menu-item:hover {
+            background-color: #4A5568;
+        }
+        .menu-item-active {
+            background-color: #2D3748;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function App() {
+            const navigateTo = (url) => {
+                window.location.href = url;
+            };
+
+            // Dummy state to indicate if there are active requests
+            const hasActiveRequests = false; // Adjust this based on your actual application logic
+
+            return (
+                <div className="flex h-screen overflow-hidden">
+                    <aside className="w-64 bg-gray-800 p-6 overflow-y-auto">
+                        <div className="mb-8">
+                            <img src="psut_logo.png" alt="University logo" />
+                            <h1 className="text-2xl font-bold mt-4">CAMPUS SYNC |</h1>
+                            <h2 className="text-xl">APPROVE NEW CLUBS</h2>
+                        </div>
+                        <nav>
+                            <ul>
+                                <li className="text-gray-400 mb-6">Menu</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Dashboard.php')}><i className="fas fa-home mr-2"></i>Dashboard</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('approve_events.html')}><i className="fas fa-check-square mr-2"></i>Approve Requests</li>
+                                <li className="menu-item menu-item-active mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Approve_club.html')}><i className="fas fa-users mr-2"></i>Approve New Clubs</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('/my-profile')}><i className="fas fa-user mr-2"></i>My Profile</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('/track-applications')}><i className="fas fa-tasks mr-2"></i>Track Applications</li>
+                                <li className="menu-item mb-4 p-2 rounded cursor-pointer" onClick={() => navigateTo('Helpandsupport_cp.html')}><i className="fas fa-question-circle mr-2"></i>Help & Support</li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <main className="flex-1 p-6 overflow-y-auto">
+                        {hasActiveRequests ? (
+                            <div>
+                                {/* Render the list of active requests here */}
+                            </div>
+                        ) : (
+                            <NoActiveRequests />
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        function NoActiveRequests() {
+            return (
+                <div className="flex flex-col items-center justify-center mt-20">
+                    <img src="no_active_pic.jpg" alt="No Requests" style={{ width: "300px", height: "300px" }} />
+                    <h2 className="text-3xl text-blue-500 mt-4">All Done!, there are no active club requests at the moment!</h2>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+
+    <?php
+    session_start();
+    ?>
+
+    <script type="text/javascript">
+        const userId = <?php echo json_encode($_SESSION['user_id']); ?>;
+        // Check if the userId exists and is not null or empty
+        if (userId) {
+            // Now you can use the userId to perform actions or requests on behalf of the logged-in user
+        }
+    </script>
+</body>
+</html>
+src

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Request Form</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function App() {
+            const [clubs, setClubs] = React.useState([]);
+
+            React.useEffect(() => {
+                fetch('fetch_club_for_event.php')
+                    .then(response => response.json())
+                    .then(data => setClubs(data))
+                    .catch(error => console.error('Error fetching clubs:', error));
+            }, []);
+
+            return (
+                <form className="container mx-auto px-4 py-8" action="apply_event.php" method="POST">
+                    <div className="flex justify-between items-center mb-10">
+                        <div className="flex items-center">
+                            <img src="psut_logo.png" alt="University logo" className="mr-2" style={{ width: '150px', height: '150px' }}/>
+                                                        <h1 className="text-4xl font-bold">CAMPUS SYNC | EVENT REQUEST</h1>
+                        </div>
+                        <div className="flex items-center">
+                            <input type="text" name="search" placeholder="Search your previous events" className="rounded-full py-2 px-4 bg-white text-black mr-4"/>
+                            <i className="fas fa-bell mr-4"></i>
+                            <i className="fas fa-user mr-4"></i>
+                            <select name="user" className="rounded-full py-2 px-4 bg-white text-black">
+                                <option>Club President!</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="flex">
+                        <div className="w-2/3 bg-black bg-opacity-25 p-8 rounded-lg mr-4">
+                            <div className="mb-6">
+                                <label className="block mb-2">Suggested Event Name</label>
+                                <input type="text" name="suggested_name" placeholder="Enter the event’s suggested name" className="w-full rounded-lg py-2 px-4 bg-white text-black"/>
+                            </div>
+                           
+                            <div className="mb-6">
+    <label className="block mb-2">Suggested Location</label>
+    <select name="suggested_location" className="w-full rounded-lg py-2 px-4 bg-white text-black">
+        <option value="Loay Shammout Auditorium">Loay Shammout Auditorium</option>
+        <option value="Friendship Auditorium">Friendship Auditorium</option>
+        <option value="Ibn Al-Shater Hall">Ibn Al-Shater Hall</option>
+    </select>
+</div>
+
+                            <div className="flex mb-6">
+                                <div className="w-1/2 mr-2">
+                                    <label className="block mb-2">Suggested Date</label>
+                                <input type="datetime-local" name="suggested_date" className="w-full rounded-lg py-2 px-4 bg-white text-black" min={getFormattedTomorrowDate()}/>
+
+                                </div>
+                                <div className="w-1/2 ml-2">
+                                    <label className="block mb-2">Club’s Name</label>
+                                    <select name="club_name" className="w-full rounded-lg py-2 px-4 bg-white text-black">
+                                        {clubs.map((club, index) => (
+                                            <option key={index} value={club}>{club}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="mb-6">
+                                <label className="block mb-2">Event Details</label>
+                                <textarea name="event_details" placeholder="Enter your event details, info, and benefits." className="w-full rounded-lg py-2 px-4 bg-white text-black h-32"></textarea>
+                            </div>
+                            <div className="flex justify-between">
+    <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Submit</button>
+    <button type="button" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" onClick={() => window.location.href='club_president_dashboard.html'}>Dashboard!</button>
+    <button type="reset" className="bg-transparent hover:bg-blue-700 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg">Clear</button>
+</div>
+
+                        </div>
+                        <div className="w-1/3 bg-black bg-opacity-25 p-8 rounded-lg">
+                            <h2 className="text-4xl font-bold mb-6">Event System</h2>
+                            <p className="mb-6">For questions, technical assistance, or any further questions, please contact the club's office via the contact information provided.</p>
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-phone-alt text-green-400 mr-2"></i>
+                                <span>0798047069</span>
+                            </div>
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-envelope text-green-400 mr-2"></i>
+                                <span>m.alshraideh@psut.edu.jo</span>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="fas fa-map-marker-alt text-green-400 mr-2"></i>
+                                <span>Clubs office, Deanship of students affairs</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+        const getFormattedTomorrowDate = () => {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);  // Set to tomorrow's date.
+            return `${tomorrow.getFullYear()}-${(tomorrow.getMonth() + 1).toString().padStart(2, '0')}-${tomorrow.getDate().toString().padStart(2, '0')}T00:00`;
+        };
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>

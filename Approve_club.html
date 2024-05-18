@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Sync | Approve New Club Requests</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function App() {
+    const [requests, setRequests] = React.useState([]);
+    const [currentRequest, setCurrentRequest] = React.useState(null);
+    const [loading, setLoading] = React.useState(true); // Loading state
+    const [expanded, setExpanded] = React.useState(false); // Define expanded state here
+    const userId = getQueryParam('user_id');
+
+    React.useEffect(() => {
+        fetch(`Approve_club.php?user_id=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    setRequests(data);
+                    setCurrentRequest(data[0]);
+                } else {
+                    window.location.href = 'no_requests_for_club.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            })
+            .finally(() => setLoading(false));
+    }, [userId]);
+
+    if (loading) {
+        return <div>Loading...</div>; // Show loading while data is fetching
+    }
+
+    if (!currentRequest) {
+        window.location.href = 'no_requests_for_club.html';
+        return null; // If there's no current request, redirect
+    }
+
+    // Function to handle actions
+  // Function to handle actions
+function handleAction(action) {
+    if (!currentRequest) return;
+
+    fetch('Approve_club.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `action=${action}&club_name=${currentRequest.club_name}&current_stage=${currentRequest.current_stage}&user_id=${userId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response:', data);  // Confirming data response
+        alert(data.message);  // Alert the message from the server
+        if (data.message.includes('Approved') || data.message.includes('Rejected')) {
+            // Filter out the handled request
+            const updatedRequests = requests.filter(req => req.id !== currentRequest.id);
+            setRequests(updatedRequests);
+            setCurrentRequest(updatedRequests.length > 0 ? updatedRequests[0] : null);
+            console.log('About to reload');  // Confirming reload will trigger
+             // Reloading the page
+        }
+    })
+    .catch(error => {
+        console.error('Error handling action:', error);
+        alert('Failed to process the request.'); // Optionally, alert the user
+    });
+}
+
+
+
+
+            return (
+                <div className="flex h-full">
+                    <aside className="w-64 bg-black bg-opacity-50 p-6">
+                        <div className="text-blue-400 mb-10">
+                            <div className="mb-4">
+                                <img src="psut_logo.png" alt="University logo" className="h-8" />
+                            </div>
+                            <h1 className="text-2xl font-bold">CAMPUS SYNC |</h1>
+                            <h1 className="text-2xl font-bold">Approve New Club Requests</h1>
+                        </div>
+                        <nav className="text-gray-300 text-sm">
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-tachometer-alt mr-2"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" className="flex items-center mb-4 text-white bg-blue-600 p-2">
+                                <i className="fas fa-inbox mr-2"></i>
+                                Approve Requests
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-calendar mr-2"></i>
+                                Calendar
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-bell mr-2"></i>
+                                Notifications
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-users mr-2"></i>
+                                Clubs Info
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-user mr-2"></i>
+                                My Profile
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-cog mr-2"></i>
+                                Settings
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-clipboard-list mr-2"></i>
+                                Track Applications
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-question-circle mr-2"></i>
+                                Help & Support
+                            </a>
+                        </nav>
+                    </aside>
+                    <div className="flex flex-col items-start justify-between w-full">
+                        <div className="flex items-center space-x-4 p-4">
+                            <i className="fas fa-bell text-gray-400"></i>
+                            <button className="bg-blue-600 px-4 py-2 rounded text-sm">Log out!</button>
+                            <div className="bg-gray-700 p-3 rounded-full">
+                                <i className="fas fa-sync text-gray-400"></i>
+                            </div>
+                        </div>
+                        <main className="flex-1">
+                            <header className="flex justify-between items-center p-6 bg-black">
+                                {/* Header content here */}
+                            </header>
+                            <div className="p-6">
+                                <div className="bg-black p-6 rounded-lg shadow-lg max-w-md mx-auto">
+                                    <div className="flex items-center mb-4">
+                                        <div className="bg-gray-700 p-3 rounded-full mr-3">
+                                            <i className="fas fa-users text-white"></i>
+                                        </div>
+                                        <div className="text-lg font-semibold">{currentRequest.club_name}</div>
+                                    </div>
+                                    <div className="mb-4">
+    <div className="text-gray-400 mb-1">Club Brief:</div>
+    <div className={`text-white ${expanded ? '' : 'truncate'}`}>
+        <div className="overflow-hidden" style={{ textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical' }}>
+            {currentRequest.club_description}
+        </div>
+        {!expanded && (
+            <button onClick={() => setExpanded(!expanded)} className="text-blue-500 text-sm mt-2 block">
+                Read More
+            </button>
+            )}
+
+    </div>
+</div>
+    
+                                    <div className="flex justify-between">
+                                        <button aria-label="Approve Club Request" onClick={() => handleAction('approve')} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">APPROVE</button>
+                                        <button aria-label="Reject Club Request" onClick={() => handleAction('reject')} className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">REFUSE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+    
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>

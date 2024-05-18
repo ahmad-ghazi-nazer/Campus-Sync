@@ -1,0 +1,111 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Sync | Approve New Club Requests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-800 to-gray-900 text-white h-screen overflow-hidden">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function App() {
+            return (
+                <div className="flex h-full">
+                    <aside className="w-64 bg-black bg-opacity-50 p-6">
+                        <div className="text-blue-400 mb-10">
+                            <div className="mb-4">
+                                <img src="https://placehold.co/100x100" alt="University logo" className="h-8" />
+                            </div>
+                            <h1 className="text-2xl font-bold">CAMPUS SYNC</h1>
+                            <p className="text-sm">APPROVE NEW CLUB REQUESTS</p>
+                        </div>
+                        <nav className="text-gray-300 text-sm">
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-tachometer-alt mr-2"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" className="flex items-center mb-4 text-white bg-blue-600 p-2">
+                                <i className="fas fa-inbox mr-2"></i>
+                                Approve Requests
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-calendar mr-2"></i>
+                                Calendar
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-bell mr-2"></i>
+                                Notifications
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-users mr-2"></i>
+                                Clubs Info
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-user mr-2"></i>
+                                My Profile
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-cog mr-2"></i>
+                                Settings
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-clipboard-list mr-2"></i>
+                                Track Applications
+                            </a>
+                            <a href="#" className="flex items-center mb-4">
+                                <i className="fas fa-question-circle mr-2"></i>
+                                Help & Support
+                            </a>
+                        </nav>
+                    </aside>
+                    <main className="flex-1 p-8">
+                        <div className="flex justify-between items-center mb-10">
+                            <div className="flex space-x-4 items-center">
+                                <div className="bg-gray-700 p-2 rounded-full">
+                                    <i className="fas fa-search text-gray-400"></i>
+                                </div>
+                                <input type="text" placeholder="Search" className="bg-gray-700 focus:outline-none rounded p-2" />
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <i className="fas fa-bell text-gray-400"></i>
+                                <button className="bg-blue-600 px-4 py-2 rounded text-sm">Log out!</button>
+                                <div className="bg-gray-700 p-3 rounded-full">
+                                    <i className="fas fa-sync text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-black bg-opacity-50 p-6 rounded-lg shadow-xl">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center">
+                                    <div className="bg-gray-700 p-4 rounded mr-4"></div>
+                                    <div>
+                                        <h2 className="text-xl font-bold text-blue-400 mb-1">Falcons Technology Club</h2>
+                                        <p className="text-gray-400">Technology club created... <a href="#" className="text-blue-400">Read more</a></p>
+                                    </div>
+                                </div>
+                                <div className="text-gray-400">3434434</div>
+                            </div>
+                            <div className="flex justify-between">
+                                <button className="bg-blue-600 px-6 py-2 rounded text-sm">APPROVE</button>
+                                <button className="bg-blue-600 px-6 py-2 rounded text-sm">REFUSE</button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>
